@@ -14,6 +14,33 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    
+    
+    
+    @IBOutlet weak var pokemonTextField: UITextField!
+    
+    @IBOutlet weak var pokemonLabel: UILabel!
+    
+    @IBAction func fetchPokemonButtonTapped(_ sender: Any) {
+        if let pokemonName = pokemonTextField.text {
+            
+            
+            PokemonController.fetchPokemon(for: pokemonName) { pokemon in
+                if let pokemon = pokemon {
+                    DispatchQueue.main.async{
+                        self.pokemonLabel.text = pokemon.name
+                    }
+                   
+                }
+            }
+        }
+        
+    }
+    
+    
+    
+       
 
+    
 }
 
