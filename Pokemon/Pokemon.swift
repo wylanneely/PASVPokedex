@@ -13,8 +13,16 @@ struct Pokemon {
     let name: String
     let id: Int
     let types: [String]
-    let imageURL: URL?
+    let imageURLs: [URL]
     let abilities: [String]
+        
+    init(name: String, id: Int, types: [String], imageURLs: [URL], abilities: [String]) {
+        self.name = name
+        self.id = id
+        self.types = types
+        self.imageURLs = imageURLs
+        self.abilities = abilities
+    }
     
 }
 
@@ -24,8 +32,8 @@ extension Pokemon {
     private static let kId = "id"
     private static let kAbilities = "abilities"
     private static let kTypes = "types"
-    private static let KImageUrl = "sprites"
-      
+    private static let KSprites = "sprites"
+    
     init?(pokemonDictionary: [String: Any]) {
           guard let name = pokemonDictionary[Pokemon.kName] as? String,
                 
@@ -35,17 +43,19 @@ extension Pokemon {
                 
          //Go over the differences between Any and AnyObject
           let typesDictionary = pokemonDictionary[Pokemon.kTypes] as? [[String: Any]]  else {return nil}
-          
-          
-          // the optional chaining "?" searches for "name" key inside of the "ability" keys dictionary, also reuires ANYOBJECT
-           // Objective-C bridging can do subscripting
         
-//        let abilities = abilitityDiction.compactMap{ $0["ability"]?["name"] as? String }
-//        
-//        
-//        let types = typesDictionary.compactMap { typeDict in
-//            (typeDict["types"] as? [String: Any])?["type"] as? String
-//        }
+        var urls = [URL]()
+        
+        if let spriteUrlArray = pokemonDictionary[Pokemon.KSprites] as? [String:Any] {
+            for sprite in spriteUrlArray {
+                if let urlString = sprite.value as? String {
+                    if let url = URL(string: urlString) {
+                        urls.append(url)
+                    }
+                }
+                
+            }
+        }
         
         var abilities = [String]()
         
@@ -56,7 +66,6 @@ extension Pokemon {
             }
         }
         
-        
         var types: [String] = []
 
         for typeDict in typesDictionary {
@@ -65,9 +74,10 @@ extension Pokemon {
                 types.append(name)
             }
         }
+        
 
         
-        self.init(name:name , id: id, types: types, imageURL: nil, abilities: abilities)
+        self.init(name:name , id: id, types: types, imageURLs: urls, abilities: abilities)
           
           
           
