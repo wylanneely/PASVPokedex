@@ -7,50 +7,67 @@
 
 import UIKit
 
-class PokemonViewController: UIViewController {
-
-    
+class PokemonViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-//        if let url = URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png")  {      NetworkController.downloadImage(from: url) { pokeImage in
-//            if let pokeImage = pokeImage {
-//                self.reloadIMage(pokeImage: pokeImage)
-//            }
-//        }
-//        }
+        setUpCollectionView()
     }
 
+    var pokemon: Pokemon?
+    var pokemonImages: [UIImage]?
     
+    //MARK: - Collection View
+    @IBOutlet weak var pokemonCollectionView: UICollectionView!
     
-    var pokemon: Pokemon? 
+    func setUpCollectionView(){
+        pokemonCollectionView.delegate = self
+        pokemonCollectionView.dataSource = self
+        
+        let nib = UINib(nibName: "PokemonViewCell", bundle: nil)
+        self.pokemonCollectionView.register(nib, forCellWithReuseIdentifier: "PokemonViewCell")
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return pokemonImages?.count ?? 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = pokemonCollectionView.dequeueReusableCell(withReuseIdentifier: "PokemonViewCell", for: indexPath) as? PokemonViewCell else {
+            return UICollectionViewCell()
+        }
+        
+        if let image = pokemonImages?[indexPath.item] {
+            cell.setImageView(with: image)
+        }
+        
+        return cell
+    }
+    
     
     //MARK: - Outlets
     
     @IBOutlet weak var pokemonTextField: UITextField!
-    @IBOutlet weak var pokemonImageView: UIImageView!
     @IBOutlet weak var pokemonLabel: UILabel!
     
     func setPokemonOutlets(){
-        if let pokemon = pokemon {
-            if let pokeUrl = pokemon.imageURLs.first {
-                NetworkController.downloadImage(from: pokeUrl) { pokemonImage in
-                    self.reloadImage(pokeImage: pokemonImage)
-                }
-            }
+        if let pokemon = pokemon?.imageURLs {
+            var i = 0
             
-            DispatchQueue.main.async{
-                self.pokemonLabel.text = pokemon.name
-            }
-           
+                NetworkController.downloadImage(from: pokeUrl) { pokemonImage in
+                    self.reloadImage(pokeImage: pokemonImage,index: <#T##Int#>)
+                    
+                }
+                
+
         }
     }
     
-    func reloadImage(pokeImage:UIImage?){
+    func reloadImage(pokeImage:UIImage?,index:Int){
+        let indexpath = IndexPath(item: index, section: 0)
         if let pokeImage = pokeImage {
             DispatchQueue.main.async {
-                self.pokemonImageView.image = pokeImage
+                pokemonCollectionView.reloadItems(at: [indexpath])
             }
         }
     }
