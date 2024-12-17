@@ -9,38 +9,50 @@ import UIKit
 
 class PokemonViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    
+    // Opening Flow: 1
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
     }
 
     var pokemon: Pokemon?
-    var pokemonImages: [UIImage]?
+    var pokemonImages: [UIImage] = []
     
     //MARK: - Collection View
     @IBOutlet weak var pokemonCollectionView: UICollectionView!
     
+    // Opening Flow: 2
     func setUpCollectionView(){
+        //CollectionView require delegate and data source, as well as the protocols
         pokemonCollectionView.delegate = self
         pokemonCollectionView.dataSource = self
         
+        //register nib for the .xib file we created
         let nib = UINib(nibName: "PokemonViewCell", bundle: nil)
         self.pokemonCollectionView.register(nib, forCellWithReuseIdentifier: "PokemonViewCell")
     }
     
+    // Opening Flow: 3 - return the number of cell items we have
+    // Loading Pokemon Flow: 4
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemonImages?.count ?? 1
+        return pokemonImages.count
     }
-    
+        
+    // Loading Pokemon Flow: 5
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        //load up a cell with the identifier "PokemonViewCell"
+        // and cast it to the cell you are trying to create PokemonViewCell
         guard let cell = pokemonCollectionView.dequeueReusableCell(withReuseIdentifier: "PokemonViewCell", for: indexPath) as? PokemonViewCell else {
+            // if fails return an empty default cell
             return UICollectionViewCell()
         }
         
-        if let image = pokemonImages?[indexPath.item] {
-            cell.setImageView(with: image)
-        }
+        let image = pokemonImages[indexPath.row]
+        cell.setImageView(with: image)
         
+    
         return cell
     }
     
@@ -50,31 +62,41 @@ class PokemonViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet weak var pokemonTextField: UITextField!
     @IBOutlet weak var pokemonLabel: UILabel!
     
+    //Loading Pokemon Flow: 2
     func setPokemonOutlets(){
-        if let pokemon = pokemon?.imageURLs {
-            var i = 0
-            
-                NetworkController.downloadImage(from: pokeUrl) { pokemonImage in
-                    self.reloadImage(pokeImage: pokemonImage,index: <#T##Int#>)
-                    
-                }
-                
-
+        //When you make a change to an object/UI element that is visable such s a label, UIImage ect.
+        //Uou must update the object from the main thread, or it will break, or not update
+        DispatchQueue.main.async {
+            self.pokemonLabel.text = self.pokemon?.name
+            //create and set the other variables like hight / moves
         }
+        
+        if let pokemonUrls = pokemon?.imageURLs {
+            for url in pokemonUrls {
+                NetworkController.downloadImage(from: url) { pokemonImage in
+                    if let pokemonImage = pokemonImage {
+                        self.reloadImage(pokeImage: pokemonImage)
+                    }
+                }
+                }
+            }
+
+        
     }
     
-    func reloadImage(pokeImage:UIImage?,index:Int){
-        let indexpath = IndexPath(item: index, section: 0)
-        if let pokeImage = pokeImage {
+    //Loading Pokemon Flow: 3
+    func reloadImage(pokeImage:UIImage){
+            pokemonImages.append(pokeImage)
             DispatchQueue.main.async {
-                pokemonCollectionView.reloadItems(at: [indexpath])
+                self.pokemonCollectionView.reloadData()
             }
-        }
     }
     
     //MARK: - Actions
     
+    //Loading Pokemon Flow: 1
     @IBAction func fetchPokemonButtonTapped(_ sender: Any) {
+        self.pokemonImages = []
         if let pokemonName = pokemonTextField.text {
             PokemonController.fetchPokemon(for: pokemonName) { pokemon in
                 self.pokemon = pokemon
