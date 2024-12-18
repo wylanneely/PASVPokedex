@@ -7,13 +7,14 @@
 
 import UIKit
 
-class PokemonViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class PokemonViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     
     // Opening Flow: 1
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpCollectionView()
+        
     }
 
     var pokemon: Pokemon?
@@ -31,7 +32,21 @@ class PokemonViewController: UIViewController, UICollectionViewDelegate, UIColle
         //register nib for the .xib file we created
         let nib = UINib(nibName: "PokemonViewCell", bundle: nil)
         self.pokemonCollectionView.register(nib, forCellWithReuseIdentifier: "PokemonViewCell")
+        
+        setUpControlFlowLayout()
     }
+    
+    func setUpControlFlowLayout(){
+        if let layout = pokemonCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+               let snappingLayout = CenterSnappingFlowLayout()
+            snappingLayout.scrollDirection = .vertical // Ensure horizontal scrolling
+               snappingLayout.itemSize = layout.itemSize
+               snappingLayout.minimumLineSpacing = layout.minimumLineSpacing
+            pokemonCollectionView.collectionViewLayout = snappingLayout
+           }
+           
+        pokemonCollectionView.decelerationRate = .fast // Ensures snapping feels natural
+       }
     
     // Opening Flow: 3 - return the number of cell items we have
     // Loading Pokemon Flow: 4
@@ -55,12 +70,22 @@ class PokemonViewController: UIViewController, UICollectionViewDelegate, UIColle
     
         return cell
     }
+        
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+                
+        
+        let width = (collectionView.frame.width + 40) / 2
+        let height = (collectionView.frame.height) / 2
+        return CGSize(width: width, height: height)
+
+      }
     
     
     //MARK: - Outlets
     
     @IBOutlet weak var pokemonTextField: UITextField!
     @IBOutlet weak var pokemonLabel: UILabel!
+    @IBOutlet weak var pokemonSaveButton: UIButton!
     
     //Loading Pokemon Flow: 2
     func setPokemonOutlets(){
@@ -106,10 +131,11 @@ class PokemonViewController: UIViewController, UICollectionViewDelegate, UIColle
         
     }
     
+    @IBAction func savePokemonTapped(_ sender: Any) {
+    }
     
     
        
 
     
 }
-

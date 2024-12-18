@@ -58,6 +58,14 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1G8-JK-v98">
+                                <rect key="frame" x="289.33333333333331" y="36" width="87.666666666666686" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="suit.heart.fill" catalog="system" title="Save"/>
+                                <connections>
+                                    <action selector="savePokemonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="A2W-xH-bcH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -68,9 +76,11 @@
                             <constraint firstItem="89R-Hh-Ewg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JP9-dm-X2g"/>
                             <constraint firstItem="J9y-hT-CaZ" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="KeQ-Vw-D3R"/>
                             <constraint firstItem="J9y-hT-CaZ" firstAttribute="top" secondItem="FS0-Vv-jZT" secondAttribute="bottom" constant="60" id="LU4-Ji-vFO"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1G8-JK-v98" secondAttribute="trailing" constant="16" id="Lfr-Ma-Uvk"/>
                             <constraint firstItem="FS0-Vv-jZT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PcZ-ad-XnD"/>
                             <constraint firstItem="SS7-VL-A3m" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="bBu-fx-6lD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="89R-Hh-Ewg" secondAttribute="trailing" id="gHO-Mb-BRu"/>
+                            <constraint firstItem="1G8-JK-v98" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="36" id="lEn-To-Myk"/>
                             <constraint firstItem="SS7-VL-A3m" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.3" id="pLF-eV-yNw"/>
                             <constraint firstItem="J9y-hT-CaZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qEq-Pt-xjJ"/>
                         </constraints>
@@ -78,6 +88,7 @@
                     <connections>
                         <outlet property="pokemonCollectionView" destination="SS7-VL-A3m" id="7gp-w3-xxq"/>
                         <outlet property="pokemonLabel" destination="FS0-Vv-jZT" id="mNc-px-b2U"/>
+                        <outlet property="pokemonSaveButton" destination="1G8-JK-v98" id="yDc-uC-b17"/>
                         <outlet property="pokemonTextField" destination="89R-Hh-Ewg" id="MCq-Ye-hCT"/>
                     </connections>
                 </viewController>
@@ -87,6 +98,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="suit.heart.fill" catalog="system" width="128" height="107"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

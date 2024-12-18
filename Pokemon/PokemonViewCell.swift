@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 class PokemonViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
